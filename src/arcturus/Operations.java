@@ -1,98 +1,106 @@
 package arcturus;
 
-/**
- * A Function with two arguments.
- * 
- * @see Function
- */
-@FunctionalInterface
-interface Function<One, Two, Three> {
-    public Three apply(One one, Two two);
+enum OperationType {
+	ADD,
+	SUBTRACT,
+	MULTIPLY,
+	DIVIDE,
+	POWER
 }
 
-public static class Operations {
-	private String stringTimes(String s, double d) {
-		int rounded = Math.ceil(d);
-		return new String(new char[rounded]).replace("\0", s)).substring(0, Math.round(s.length() * d));
-	}
-	//TODO: add array types
-	private Map<Type, Map<Type, Function<Value, Value, Value>>> addDictionary = new HashMap() {{
-		put(Type.STRING, new HashMap() {{
-			put(Type.STRING, (left, right) -> new Value(left.getString() + right.getString()));
-			put(Type.INTEGER, (left, right) -> new Value(left.getString() + right.getString()));
-			put(Type.DOUBLE, (left, right) -> new Value(left.getString() + right.getString()));
+//Seriously, this is a lot more concise than the format in Actions
+//Please don't delete.
+//@quartata If you don't understand or have any complaints, please add a comment
+//If you have suggestions on how this can be more DRY, please add a comment
+
+//@quartata @eridan what do the other operations do? don't forget array operations
+//@quartata @eridan does array * double multiply length and fill with items from original array?
+//or does it multiply each item?
+public class Operations {
+	public static final HashMap<Type, HashMap<Type, HashMap<OperationType, Operation>>> operations = new HashMap<Type, HashMap<Type, HashMap<OperationType, Operation>>>() {{
+		put(Type.STRING, new HashMap<Type, HashMap<OperationType, Operation>>() {{
+			put(Type.STRING, new HashMap<OperationType, Operation>>() {{
+				put(OperationType.ADD, (left, right) -> new Value(left.getString() + right.getString()));
+			}});
+			put(Type.INTEGER, new HashMap<OperationType, Operation>>() {{
+				put(OperationType.ADD, (v1, v2) -> new Value(left.getString() + right.getAsString()));
+				put(OperationType.MULTIPLY, (v1, v2) -> new Value(Utils.stringTimes(left.getString(), right.getAsDouble())));
+			}});
+			put(Type.DOUBLE, new HashMap<OperationType, Operation>>() {{
+				put(OperationType.ADD, (v1, v2) -> new Value(left.getString() + right.getAsString()));
+				put(OperationType.MULTIPLY, (v1, v2) -> new Value(Utils.stringTimes(left.getString(), right.getDouble())));
+			}});
 		}});
-		put(Type.INTEGER, new HashMap() {{
-			put(Type.STRING, (left, right) -> new Value(left.getString() + right.getString()));
-			put(Type.INTEGER, (left, right) -> new Value(left.getInteger() + right.getInteger()));
-			put(Type.DOUBLE, (left, right) -> new Value(left.getDouble() + right.getDouble()));
+		put(Type.INTEGER, new HashMap<Type, HashMap<OperationType, Operation>>() {{
+			put(Type.STRING, new HashMap<OperationType, Operation>>() {{
+				put(OperationType.ADD, (left, right) -> new Value(left.getAsString() + right.getString()));
+				put(OperationType.MULTIPLY, (left, right) -> new Value(Utils.stringTimes(right.getString(), left.getAsDouble())));
+			}});
+			put(Type.INTEGER, new HashMap<OperationType, Operation>>() {{
+				put(OperationType.ADD, (v1, v2) -> new Value(left.getInteger() + right.getInteger()));
+				put(OperationType.SUBTRACT, (v1, v2) -> new Value(left.getInteger() - right.getInteger()));
+				put(OperationType.MULTIPLY, (v1, v2) -> new Value(left.getInteger() * right.getInteger()));
+				put(OperationType.DIVIDE, (v1, v2) -> new Value(left.getInteger() / right.getInteger()));
+				put(OperationType.POWER, (v1, v2) -> new Value(Math.pow(left.getInteger() , right.getInteger())));
+			}});
+			put(Type.DOUBLE, new HashMap<OperationType, Operation>>() {{
+				put(OperationType.ADD, (v1, v2) -> new Value(left.getAsDouble() + right.getDouble()));
+				put(OperationType.SUBTRACT, (v1, v2) -> new Value(left.getAsDouble() - right.getDouble()));
+				put(OperationType.MULTIPLY, (v1, v2) -> new Value(left.getAsDouble() * right.getDouble()));
+				put(OperationType.DIVIDE, (v1, v2) -> new Value(left.getAsDouble() / right.getDouble()));
+				put(OperationType.POWER, (v1, v2) -> new Value(Math.pow(left.getAsDouble() , right.getDouble())));
+			}});
 		}});
-		put(Type.DOUBLE, new HashMap() {{
-			put(Type.STRING, (left, right) -> new Value(left.getString() + right.getString()));
-			put(Type.INTEGER, (left, right) -> new Value(left.getDouble() + right.getDouble()));
-			put(Type.DOUBLE, (left, right) -> new Value(left.getDouble() + right.getDouble()));
+		put(Type.DOUBLE, new HashMap<Type, HashMap<OperationType, Operation>>() {{
+			put(Type.STRING, new HashMap<OperationType, Operation>>() {{
+				put(OperationType.ADD, (left, right) -> new Value(left.getAsString() + right.getString()));
+				put(OperationType.MULTIPLY, (left, right) -> new Value(Utils.stringTimes(right.getString(), left.getDouble())));
+			}});
+			put(Type.INTEGER, new HashMap<OperationType, Operation>>() {{
+				put(OperationType.ADD, (v1, v2) -> new Value(left.getDouble() + right.getAsDouble()));
+				put(OperationType.SUBTRACT, (v1, v2) -> new Value(left.getDouble() - right.getAsDouble()));
+				put(OperationType.MULTIPLY, (v1, v2) -> new Value(left.getDouble() * right.getAsDouble()));
+				put(OperationType.DIVIDE, (v1, v2) -> new Value(left.getDouble() / right.getAsDouble()));
+				put(OperationType.POWER, (v1, v2) -> new Value(Math.pow(left.getDouble() , right.getAsDouble())));
+			}});
+			put(Type.DOUBLE, new HashMap<OperationType, Operation>>() {{
+				put(OperationType.ADD, (v1, v2) -> new Value(left.getDouble() + right.getDouble()));
+				put(OperationType.SUBTRACT, (v1, v2) -> new Value(left.getDouble() - right.getDouble()));
+				put(OperationType.MULTIPLY, (v1, v2) -> new Value(left.getDouble() * right.getDouble()));
+				put(OperationType.DIVIDE, (v1, v2) -> new Value(left.getDouble() / right.getDouble()));
+				put(OperationType.POWER, (v1, v2) -> new Value(Math.pow(left.getDouble() , right.getDouble())));
+			}});
 		}});
-	}}
-	private Map<Type, Map<Type, Function<Value, Value, Value>>> subtractDictonary = new HashMap() {{
-		put(Type.INTEGER, new HashMap() {{
-			put(Type.INTEGER, (left, right) -> new Value(left.getInteger() - right.getInteger()));
-			put(Type.DOUBLE, (left, right) -> new Value(left.getDouble() - right.getDouble()));
-		}});
-		put(Type.DOUBLE, new HashMap() {{
-			put(Type.INTEGER, (left, right) -> new Value(left.getDouble() - right.getDouble()));
-			put(Type.DOUBLE, (left, right) -> new Value(left.getDouble() - right.getDouble()));
-		}});
-	}}
-	private Map<Type, Map<Type, Function<Value, Value, Value>>> multiplyDictionary = new HashMap() {{
-		put(Type.STRING, new HashMap() {{
-			put(Type.INTEGER, (left, right) -> new Value(stringTimes(left.getString(), right.getDouble())));
-			put(Type.DOUBLE, (left, right) -> new Value(stringTimes(left.getString(), right.getDouble())));
-		}});
-		put(Type.INTEGER, new HashMap() {{
-			put(Type.STRING, (left, right) -> new Value(stringTimes(left.getDouble(), right.getString())));
-			put(Type.INTEGER, (left, right) -> new Value(left.getInteger() * right.getInteger()));
-			put(Type.DOUBLE, (left, right) -> new Value(left.getDouble() * right.getDouble()));
-		}});
-		put(Type.DOUBLE, new HashMap() {{
-			put(Type.STRING, (left, right) -> new Value(stringTimes(left.getDouble(), right.getString())));
-			put(Type.INTEGER, (left, right) -> new Value(left.getDouble() * right.getDouble()));
-			put(Type.DOUBLE, (left, right) -> new Value(left.getDouble() * right.getDouble()));
-		}});
-	}}
-	private Map<Type, Map<Type, Function<Value, Value, Value>>> divideDictionary = new HashMap() {{
-		put(Type.STRING, new HashMap() {{
-			put(Type.INTEGER, (left, right) -> new Value(stringTimes(left.getString(), 1 / right.getDouble())));
-			put(Type.DOUBLE, (left, right) -> new Value(stringTimes(left.getString(), 1 / right.getDouble())));
-		}});
-		put(Type.INTEGER, new HashMap() {{
-			put(Type.INTEGER, (left, right) -> new Value(left.getInteger() / right.getInteger()));
-			put(Type.DOUBLE, (left, right) -> new Value(left.getDouble() / right.getDouble()));
-		}});
-		put(Type.DOUBLE, new HashMap() {{
-			put(Type.INTEGER, (left, right) -> new Value(left.getDouble() / right.getDouble()));
-			put(Type.DOUBLE, (left, right) -> new Value(left.getDouble() / right.getDouble()));
-		}});
-	}}
-	private Value performOperation(Map<Type, Map<Type, Function<Value, Value, Value>>> dictionary, Value left, Value right) throws NoOperationException {
-		Type leftType = left.getType();
-		Type rightType = right.getType();
-		if (dictionary.containsKey(leftType) && dictionary.get(leftType).containsKey(rightType)) {
-			return dictionary.get(leftType).get(rightType)(left, right);
+	}};
+
+	//TODO: DRY
+	static Value operate(Value left, Value right, OperationType operationType) {
+		leftType = left.getType();
+		if (operations.containsKey(leftType)) {
+			leftMap = operations.get(leftType);
+
+			rightType = right.getType();
+			if (leftMap.containsKey(rightType)) {
+				rightMap = operations.get(lrightType);
+
+				if (rightMap.containsKey(operationType)) {
+					return rightMap.get(operationType)(left, right);
+				}
+				else {
+					throw new NoOperationException(leftType, rightType, operationType);
+				}
+			}
+			else {
+				throw new NoOperationException(leftType, rightType);
+			}
 		}
 		else {
-			throw new NoOperationException(leftType, rightType);
+			throw new NoOperationException(leftType);
 		}
 	}
-	public Value add(Value left, Value right) {
-		return performOperation(addDictionary, left, right);
-	}
-	public Value subtract(Value left, Value right) {
-		return performOperation(subtractDictonary, left, right);
-	}
-	public Value multiply(Value left, Value right) {
-		return performOperation(multiplyDictionary, left, right);
-	}
-	public Value divide(Value left, Value right) {
-		return performOperation(divideDictionary, left, right);
-	}
+}
+
+@FunctionalInterface
+interface Operation {
+    public Value operate(Value left, Value right);
 }

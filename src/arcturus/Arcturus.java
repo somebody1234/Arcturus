@@ -4,73 +4,52 @@
 
 package arcturus;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.regex.Pattern;
-import java.util.ArrayList;
-import java.util.Map;
-import kareltherobot.Directions.Direction;
+
 
 //TODO: test everything
-public class Arcturus extends LetterRobot {
-	public Arcturus(String name, int avenue, int street, Direction direction, int beepers) {
-		super(name, avenue, street, direction, beepers);
+public class Arcturus {
+	
+	public Tape tape = new Tape(256, 128);
+	public Robot robot = new Robot(0);
+	public String code;
+	public Scanner input = new Scanner(System.in);
+	public int codePointer = 0;
+	
+	public Arcturus(String code, String input) {
+		this.code = code;
+		//this.tape.setValue(input); // set origin cell to input
+		//somebody: this is a bad idea, especially if you aim to support multiple inputs like many esolangs
 	}
 	
-	public static void main(String[] args) {
-		//temporary
-		ArrayList<String> code = new ArrayList<String>();
-		for (String line : Files.readAllLines(Paths.get(args[0]))) {
-		    code.add(line);
+	public void execute() {
+		while(codePointer < code.length()) { 
+			Operations.operations.get(code.charAt(codePointer));
 		}
-		
-		Arcturus bot = new Arcturus();
-		Pattern rDouble = Pattern.compile("[\d,]+\.\d+");
-		Pattern rInteger = Pattern.compile("[\d,]+");
-		Scanner stdin = new Scanner(System.in);
-		String program = stdin.nextLine();
-		Type inputType = null; //TODO
-		String input = stdin.nextLine(); //TODO: read only if there is input
-		
-		if(input.charAt(0) == '"') {
-			inputType = Type.STRING;
-		}
-		else if(input.charAt(0) == '[') {
-			inputType = Type.ARRAY; //TODO: differentiate between element type
-		}
-		else if(rDouble.Matcher(input).Matches()) {
-			inputType = Type.DOUBLE;
-		}
-		else if(rInteger.Matcher(input).Matches()) {
-			inputType = Type.INTEGER;
-		}
-		
-		
-		currentType = inputType;
-		
-		//Interpreting input
-		
-		if(currentType == Type.STRING) {
-			for (char character: input) {
-				bot.putBeeper((int) character);
+		if(code.length() == 0) {
+			double random = Math.random();
+			if (random < 0.01) {
+				System.out.println("ಠ_ಠ");
 			}
-			/*for(int characterIndex = 0; characterIndex < input.length(); characterIndex++) {
-				char currentCharacter = input.charAt(characterIndex);
-				int ASCIIValue = (int) currentCharacter;
-				bot.putBeeper(ASCIIValue); //can't make static reference to non-static method???
-			}*/
+			else if (random < 0.02) {
+				System.out.println("Write a program, you fool ");
+			}
+			else {
+				System.out.println("Because the people who are crazy enough to think they can change the world are the ones who do.");
+			}
 		}
-		if(currentType == Type.ARRAY) {
-		}
-		if(currentType == Type.DOUBLE) {
-			//double d = Double.parseDouble(input);
-		}
-		if(currentType == Type.INTEGER) {
-			//int i = Integer.parseInt(input);
-		}
-		//when double, set variable "a" equal double and give separate row.
-		
-		//commands have different functions depending on currentType, so can have 255*4 possible builtins
-		
-		//printing
+	}
+
+	public Value getInput() {
+		String input = this.input.stdin.nextLine(); //TODO: parse type
+		return new Value(input);
+	}
+
+	public static void main(String[] args) throws IOException {
+		String program = new String(Files.readAllBytes(Paths.get(args[0])), "CP437"); // read code from file and interpret as CP437
+
+		Arcturus arc = new Arcturus(program).execute(); // run
 	}
 }

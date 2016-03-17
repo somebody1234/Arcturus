@@ -1,42 +1,41 @@
 package arcturus;
 
 public class Tape {
-	private String[] tape;
-	//private Value[] tape;
-	private Type[] types;
+	private Value[] tape; //somebody: it's a string internally, but that would become ugly if it was a string eternally as well IMO
 	private int size;
 	private int origin;
+	//private int pos; //somebody: not very OOP-like
 	
-	public Tape(int size, int offset) {
+	public Tape(int size, int origin) {
 		this.tape = new Value[size];
-		this.types = new Type[size];
 		this.size = size;
-		this.origin = offset;
-	}
-	
-	public void setValue(int position, String s) {
-		this.tape[this.calculatePosition(position + this.origin)] = new Value(s);
+		this.origin = origin;
+		this.pos = 0;
 	}
 
-	public void setValue(int position, int i) {
-		this.tape[this.calculatePosition(position + this.origin)] = new Value(i);
-	}
-
-	public void setValue(int position, double d) {
-		this.tape[this.calculatePosition(position + this.origin)] = new Value(d);
+	public Value getValueAt(int position) {
+		return this.tape[this.calculatePosition(position)];
 	}
 	
-	public void setValue(int position, Value v) {
+	public void setValueAt(int position, Value v) {
 		this.tape[this.calculatePosition(position + this.origin)] = v;
 	}
-	
+
 	public int calculatePosition(int position) {
 		return (position + this.size) % this.size; //So negative values will work
 	}
 	
-	public String getValue(int position) {
-		return this.tape[this.calculatePosition(position)];
-	}
+	public Value getValue(int position) { return getValueAt(position); }
+	
+	public void setValue(int position, Value v) { setValueAt(position, v); }
+
+	ArrayList<Value> getValues(int start, int length) { return new ArrayList(tape.subList(start, start + length + 1)); }
+
+	//void setValues(int start, ArrayList<Value> v) { setValueAt(position, v); }
+
+	/*public int getPos() { return pos; }
+	
+	public void setPos(int i) { pos = calculatePosition(i); }*/
 	
 	public void print(int position) {
 		System.out.println(this.getValue(position));

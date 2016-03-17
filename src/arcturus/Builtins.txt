@@ -1,0 +1,96 @@
+Empty program: print "Because the people who are crazy enough to think they can change the world are the ones who do."
+
+Builtins
+
+MATH
+    Constants
+        10
+        16
+        64
+        100
+        256
+        pi
+        e
+        sqrt(2)
+        sqrt(3)
+        phi
+        i
+    Operations (A is current cell, B is cell to right, etc.)
+        Negate A
+        abs(A)
+        A=B
+        A==B?
+        A<B?
+        A>B?
+        A≤B?
+        A≥B?
+        Add A to B
+        Add 1 to A
+        Subtract A from B
+        Subtract B from A
+        Subtract 1 from A
+        Multiply A by B
+        Divide A by B
+        Divide A by B
+        1/A
+        A^B
+        B^A
+        A^2
+        A^3
+        sqrt(A)
+        cbrt(A)
+        log_A(B)
+        log_B(A)
+        
+        Convert A to base 2
+        Convert A to base 10
+        Convert A to base 16
+        Convert A to base B
+        A bitwise AND B
+        A bitwise OR B
+        A mod 2
+        A mod 10
+        A mod 16
+        A mod B
+        
+        Convert A to radians
+        Convert A to degrees
+        
+    Primes
+        Is A prime
+        Ath prime
+        First A primes
+        totient(A)
+        Prime factorization of A into array [[a1, p1] [a2, p2] ... ]
+        zeta(A)
+    Other functions
+        signum(A)
+        fibonacci(A)
+        
+        A!
+        A choose B
+        A perm B
+        
+        min(A,B)
+        max(A,B)
+        
+        Separate digits of A into array
+        Concatenate B to A
+        Concatenate A to B
+        
+        sin(A)
+        cos(A)
+        tan(A)
+        cot(A)
+        sec(A)
+        csc(A)
+        arcsin(A)
+        arccos(A)
+        arctan(A)
+        sinh(A)
+        cosh(A)
+        tanh(A)
+        
+        Random double in [0,1]
+        Random integer in [0,A]
+        Random integer in [A,B]

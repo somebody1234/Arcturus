@@ -8,8 +8,9 @@ package arcturus;
 public class Value {
 	private String value;
 	private ArrayList<String> arrayValue;
-	private boolean isArray; //TODO: needed?
+	private boolean isArray;
 	private Type type;
+	//TODO: convert arrays to strings as well?
 
     /**
      * Creates a Value object from a string.
@@ -87,14 +88,44 @@ public class Value {
 	}
 
     /**
+     * Gets the value of a Value as a string.
+     * 
+     * @return Value of the string Value.
+     * @see    Value
+     */
+	String getAsString() {
+		return this.value;
+	}
+
+    /**
+     * Gets the value of a Value as a integer.
+     * 
+     * @return Value.
+     * @see    Value
+     */
+	int getAsInteger() {
+		return Integer.parseInt(this.value);
+	}
+
+    /**
+     * Gets the value of a Value as a double.
+     * 
+     * @return Value.
+     * @see    Value
+     */
+	double getAsDouble() {
+		return Double.parseDouble(this.value);
+	}
+
+    /**
      * Gets the value of a string Value.
      * 
      * @return Value of the string Value.
      * @see    Value
      */
 	String getString() {
-		if (this.type = Type.String) {
-			return this.value;
+		if (this.type = Type.STRING) {
+			return this.getAsString();
 		}
 	}
 
@@ -106,7 +137,7 @@ public class Value {
      */
 	int getInteger() {
 		if (this.type = Type.INTEGER) {
-			return Integer.parseInt(this.value);
+			return this.getAsInteger();
 		}
 	}
 
@@ -118,7 +149,7 @@ public class Value {
      */
 	public double getDouble() {
 		if (this.type = Type.DOUBLE) {
-			return Double.parseDouble(this.value);
+			return this.getAsDouble();
 		}
 	}
 
@@ -177,7 +208,7 @@ public class Value {
 	}
 
 	public String toString() {
-		if (str != null && !str.isEmpty()) {
+		if (!this.isArray {
 			return this.value;
 		}
 		else {
