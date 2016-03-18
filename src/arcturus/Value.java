@@ -1,16 +1,16 @@
 package arcturus;
 
-//TODO: make javadocs more informative
-
 /**
  * An Arcturus value.
+ * 
+ * @since 0.0
  */
 public class Value {
 	private String value;
 	private ArrayList<String> arrayValue;
 	private boolean isArray;
 	private Type type;
-	//TODO: convert arrays to strings as well?
+	//TODO: convert arrays to strings as well
 
     /**
      * Creates a Value object from a string.

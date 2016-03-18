@@ -10,6 +10,11 @@ import java.util.Scanner;
 
 
 //TODO: test everything
+/**
+ * The main class of Arcturus.
+ * 
+ * @since 0.0
+ */
 public class Arcturus {
 	
 	public Tape tape = new Tape(256, 128);
@@ -20,25 +25,25 @@ public class Arcturus {
 	
 	public Arcturus(String code, String input) {
 		this.code = code;
-		//this.tape.setValue(input); // set origin cell to input
-		//somebody: this is a bad idea, especially if you aim to support multiple inputs like many esolangs
+		this.tape.setValue(input); // set origin cell to input
+		//TODO: multiple input
 	}
 	
 	public void execute() {
-		while(codePointer < code.length()) { 
-			Operations.operations.get(code.charAt(codePointer));
-		}
 		if(code.length() == 0) {
 			double random = Math.random();
 			if (random < 0.01) {
 				System.out.println("ಠ_ಠ");
 			}
 			else if (random < 0.02) {
-				System.out.println("Write a program, you fool ");
+				System.out.println("Write a program, you fool ಠ_ಠ");
 			}
 			else {
 				System.out.println("Because the people who are crazy enough to think they can change the world are the ones who do.");
 			}
+		}
+		while(codePointer < code.length()) { 
+			Operations.operations.get(code.charAt(codePointer));
 		}
 	}
 
@@ -50,6 +55,6 @@ public class Arcturus {
 	public static void main(String[] args) throws IOException {
 		String program = new String(Files.readAllBytes(Paths.get(args[0])), "CP437"); // read code from file and interpret as CP437
 
-		Arcturus arc = new Arcturus(program).execute(); // run
+		Arcturus arc = new Arcturus(program,input.nextLine()).execute(); // run
 	}
 }

@@ -1,4 +1,4 @@
-Empty program: print "Because the people who are crazy enough to think they can change the world are the ones who do."
+Empty program: print "Write a program, you fool ಠ_ಠ"
 
 Builtins
 

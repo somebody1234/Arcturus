@@ -1,106 +1,127 @@
 package arcturus;
 
-enum OperationType {
-	ADD,
-	SUBTRACT,
-	MULTIPLY,
-	DIVIDE,
-	POWER
-}
+//TODO: check operation has correct number of arguments? or just Java handle it?
 
-//Seriously, this is a lot more concise than the format in Actions
-//Please don't delete.
-//@quartata If you don't understand or have any complaints, please add a comment
-//If you have suggestions on how this can be more DRY, please add a comment
+/**
+ * Key type for Operations
+ * 
+ * @since 0.0
+ * @see Operations
+ */
+class OperationType {
+	public char operator;
+	public Type[] types;
 
-//@quartata @eridan what do the other operations do? don't forget array operations
-//@quartata @eridan does array * double multiply length and fill with items from original array?
-//or does it multiply each item?
-public class Operations {
-	public static final HashMap<Type, HashMap<Type, HashMap<OperationType, Operation>>> operations = new HashMap<Type, HashMap<Type, HashMap<OperationType, Operation>>>() {{
-		put(Type.STRING, new HashMap<Type, HashMap<OperationType, Operation>>() {{
-			put(Type.STRING, new HashMap<OperationType, Operation>>() {{
-				put(OperationType.ADD, (left, right) -> new Value(left.getString() + right.getString()));
-			}});
-			put(Type.INTEGER, new HashMap<OperationType, Operation>>() {{
-				put(OperationType.ADD, (v1, v2) -> new Value(left.getString() + right.getAsString()));
-				put(OperationType.MULTIPLY, (v1, v2) -> new Value(Utils.stringTimes(left.getString(), right.getAsDouble())));
-			}});
-			put(Type.DOUBLE, new HashMap<OperationType, Operation>>() {{
-				put(OperationType.ADD, (v1, v2) -> new Value(left.getString() + right.getAsString()));
-				put(OperationType.MULTIPLY, (v1, v2) -> new Value(Utils.stringTimes(left.getString(), right.getDouble())));
-			}});
-		}});
-		put(Type.INTEGER, new HashMap<Type, HashMap<OperationType, Operation>>() {{
-			put(Type.STRING, new HashMap<OperationType, Operation>>() {{
-				put(OperationType.ADD, (left, right) -> new Value(left.getAsString() + right.getString()));
-				put(OperationType.MULTIPLY, (left, right) -> new Value(Utils.stringTimes(right.getString(), left.getAsDouble())));
-			}});
-			put(Type.INTEGER, new HashMap<OperationType, Operation>>() {{
-				put(OperationType.ADD, (v1, v2) -> new Value(left.getInteger() + right.getInteger()));
-				put(OperationType.SUBTRACT, (v1, v2) -> new Value(left.getInteger() - right.getInteger()));
-				put(OperationType.MULTIPLY, (v1, v2) -> new Value(left.getInteger() * right.getInteger()));
-				put(OperationType.DIVIDE, (v1, v2) -> new Value(left.getInteger() / right.getInteger()));
-				put(OperationType.POWER, (v1, v2) -> new Value(Math.pow(left.getInteger() , right.getInteger())));
-			}});
-			put(Type.DOUBLE, new HashMap<OperationType, Operation>>() {{
-				put(OperationType.ADD, (v1, v2) -> new Value(left.getAsDouble() + right.getDouble()));
-				put(OperationType.SUBTRACT, (v1, v2) -> new Value(left.getAsDouble() - right.getDouble()));
-				put(OperationType.MULTIPLY, (v1, v2) -> new Value(left.getAsDouble() * right.getDouble()));
-				put(OperationType.DIVIDE, (v1, v2) -> new Value(left.getAsDouble() / right.getDouble()));
-				put(OperationType.POWER, (v1, v2) -> new Value(Math.pow(left.getAsDouble() , right.getDouble())));
-			}});
-		}});
-		put(Type.DOUBLE, new HashMap<Type, HashMap<OperationType, Operation>>() {{
-			put(Type.STRING, new HashMap<OperationType, Operation>>() {{
-				put(OperationType.ADD, (left, right) -> new Value(left.getAsString() + right.getString()));
-				put(OperationType.MULTIPLY, (left, right) -> new Value(Utils.stringTimes(right.getString(), left.getDouble())));
-			}});
-			put(Type.INTEGER, new HashMap<OperationType, Operation>>() {{
-				put(OperationType.ADD, (v1, v2) -> new Value(left.getDouble() + right.getAsDouble()));
-				put(OperationType.SUBTRACT, (v1, v2) -> new Value(left.getDouble() - right.getAsDouble()));
-				put(OperationType.MULTIPLY, (v1, v2) -> new Value(left.getDouble() * right.getAsDouble()));
-				put(OperationType.DIVIDE, (v1, v2) -> new Value(left.getDouble() / right.getAsDouble()));
-				put(OperationType.POWER, (v1, v2) -> new Value(Math.pow(left.getDouble() , right.getAsDouble())));
-			}});
-			put(Type.DOUBLE, new HashMap<OperationType, Operation>>() {{
-				put(OperationType.ADD, (v1, v2) -> new Value(left.getDouble() + right.getDouble()));
-				put(OperationType.SUBTRACT, (v1, v2) -> new Value(left.getDouble() - right.getDouble()));
-				put(OperationType.MULTIPLY, (v1, v2) -> new Value(left.getDouble() * right.getDouble()));
-				put(OperationType.DIVIDE, (v1, v2) -> new Value(left.getDouble() / right.getDouble()));
-				put(OperationType.POWER, (v1, v2) -> new Value(Math.pow(left.getDouble() , right.getDouble())));
-			}});
-		}});
-	}};
+	/**
+	 * Creates an OperationType using the specified character and arrya of parameter types.
+	 * 
+	 * @see OperationType
+	 */
+	OperationType(char operator, Type[] types) {
+		this.operator = operator;
+		this.types = types;
+	}
 
-	//TODO: DRY
-	static Value operate(Value left, Value right, OperationType operationType) {
-		leftType = left.getType();
-		if (operations.containsKey(leftType)) {
-			leftMap = operations.get(leftType);
+	@Override
+	public int hashCode() { //arity is just Type[]'s length, meaning no conflicts
+		int typeLength = Type.LENGTH;
+		int hash = types.reduce(0, (total, type) -> total * typeLength + type.index());
+		return hash * 256 + 
+			(int) this.operator; //assuming full-byte encoding
+	}
 
-			rightType = right.getType();
-			if (leftMap.containsKey(rightType)) {
-				rightMap = operations.get(lrightType);
-
-				if (rightMap.containsKey(operationType)) {
-					return rightMap.get(operationType)(left, right);
-				}
-				else {
-					throw new NoOperationException(leftType, rightType, operationType);
-				}
-			}
-			else {
-				throw new NoOperationException(leftType, rightType);
-			}
+	@Override
+	public boolean equals(Object obj) {
+		if (!obj instanceof OperationType) {
+			return false;
 		}
-		else {
-			throw new NoOperationException(leftType);
-		}
+		return this.operator == obj.operator && 
+			this.types.equals(other.types);
 	}
 }
 
-@FunctionalInterface
-interface Operation {
-    public Value operate(Value left, Value right);
+//If you have suggestions on how this can be more DRY, please add a comment
+//@quartata @eridan what do the other operations do? don't forget array operations
+//@quartata @eridan does array * double multiply length and fill with items from original array?
+//or does it multiply each item?
+
+//@quartata I can add arities back if you want.
+/**
+ * Contains all operations used by Arcturus, and what they do.
+ * 
+ * @since 0.0
+ * @see   OperationType
+ */
+public class Operations {
+	public static final HashMap<OperationType, Function<Value[], Value>> operations = new HashMap<OperationType,Function<Value[], Value>>(256, 0) {
+		//TODO: make sure 0 works, otherwise use 0.01 (min time, assuming plenty of space)
+		put(new OperationType('+', new Type[]{Type.STRING, Type.STRING}),
+			values -> new Value(values[0].getString() + values[1].getString()));
+		put(new OperationType('+, new Type[]{Type.STRING, Type.INTEGER}),
+			values -> new Value(values[0].getString() + values[1].getAsString()));
+		put(new OperationType('+, new Type[]{Type.STRING, Type.DOUBLE}),
+			values -> new Value(values[0].getString() + values[1].getAsString()));
+
+		put(new OperationType('+', new Type[]{Type.INTEGER, Type.STRING}),
+			values -> new Value(values[0].getAsString() + values[1].getString()));
+		put(new OperationType('+', new Type[]{Type.INTEGER, Type.INTEGER}),
+			values -> new Value(values[0].getInteger() + values[1].getInteger()));
+		put(new OperationType('+', new Type[]{Type.INTEGER, Type.DOUBLE}),
+			values -> new Value(values[0].getInteger() + values[1].getDouble()));
+
+		put(new OperationType('+', new Type[]{Type.DOUBLE, Type.STRING}),
+			values -> new Value(values[0].getAsString() + values[1].getString()));
+		put(new OperationType('+', new Type[]{Type.DOUBLE, Type.INTEGER}),
+			values -> new Value(values[0].getDouble() + values[1].getInteger()));
+		put(new OperationType('+', new Type[]{Type.DOUBLE, Type.DOUBLE}),
+			values -> new Value(values[0].getDouble() + values[1].getDouble()));
+
+
+		put(new OperationType('-', new Type[]{Type.INTEGER, Type.INTEGER}),
+			values -> new Value(values[0].getInteger() - values[1].getInteger()));
+		put(new OperationType('-', new Type[]{Type.INTEGER, Type.DOUBLE}),
+			values -> new Value(values[0].getInteger() - values[1].getDouble()));
+
+		put(new OperationType('-', new Type[]{Type.DOUBLE, Type.INTEGER}),
+			values -> new Value(values[0].getDouble() - values[1].getInteger()));
+		put(new OperationType('-', new Type[]{Type.DOUBLE, Type.DOUBLE}),
+			values -> new Value(values[0].getDouble() - values[1].getDouble()));
+
+
+		put(new OperationType('*', new Type[]{Type.STRING, Type.INTEGER}),
+			values -> new Value(Utils.stringTimes(values[0].getString(), values[1].getAsDouble())));
+		put(new OperationType('*', new Type[]{Type.STRING, Type.DOUBLE}),
+			values -> new Value(Utils.stringTimes(values[0].getString(), values[1].getDouble())));
+
+		put(new OperationType('*', new Type[]{Type.INTEGER, Type.STRING}),
+			values -> new Value(Utils.stringTimes(values[1].getString(), values[0].getAsDouble())));
+		put(new OperationType('*', new Type[]{Type.INTEGER, Type.INTEGER}),
+			values -> new Value(values[0].getInteger() * values[1].getInteger()));
+		put(new OperationType('*', new Type[]{Type.INTEGER, Type.DOUBLE}),
+			values -> new Value(values[0].getInteger() * values[1].getDouble()));
+
+		put(new OperationType('*', new Type[]{Type.DOUBLE, Type.STRING}),
+			values -> new Value(Utils.stringTimes(values[1].getString(), values[0].getDouble())));
+		put(new OperationType('*', new Type[]{Type.DOUBLE, Type.INTEGER}),
+			values -> new Value(values[0].getDouble() * values[1].getInteger()));
+		put(new OperationType('*', new Type[]{Type.DOUBLE, Type.DOUBLE}),
+			values -> new Value(values[0].getDouble() * values[1].getDouble()));
+
+
+		put(new OperationType('/', new Type[]{Type.STRING, Type.INTEGER}),
+			values -> new Value(Utils.stringTimes(values[0].getString(), 1/values[1].getAsDouble())));
+		put(new OperationType('/', new Type[]{Type.STRING, Type.DOUBLE}),
+			values -> new Value(Utils.stringTimes(values[0].getString() + 1/values[1].getDouble())));
+
+		put(new OperationType('/', new Type[]{Type.INTEGER, Type.INTEGER}),
+			values -> new Value(values[0].getInteger() / values[1].getInteger())); //TODO: this performs integer division, not sue if this behavior is wanted, or if it will be for '\' instead
+		put(new OperationType('/', new Type[]{Type.INTEGER, Type.DOUBLE}),
+			values -> new Value(values[0].getInteger() / values[1].getDouble()));
+
+		put(new OperationType('/', new Type[]{Type.DOUBLE, Type.INTEGER}),
+			values -> new Value(values[0].getDouble() / values[1].getInteger()));
+		put(new OperationType('/', new Type[]{Type.DOUBLE, Type.DOUBLE}),
+			values -> new Value(values[0].getDouble() / values[1].getDouble()));
+	};
 }
+

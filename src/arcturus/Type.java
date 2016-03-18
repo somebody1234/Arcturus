@@ -1,18 +1,29 @@
 package arcturus;
 
+/**
+ * An enum representi type of a Value.
+ * 
+ * @see   Value
+ * @since 0.0
+ */
 public enum Type {
-	STRING        (       "string"),
-	DOUBLE        (       "double"),
-	INTEGER       (      "integer"),
-	STRING_ARRAY  ( "string array"),
-	DOUBLE_ARRAY  ( "double array"),
-	INTEGER_ARRAY ("integer array");
+	STRING        (       "string", 1),
+	DOUBLE        (       "double", 2),
+	INTEGER       (      "integer", 3),
+	STRING_ARRAY  ( "string array", 4),
+	DOUBLE_ARRAY  ( "double array", 5),
+	INTEGER_ARRAY ("integer array", 6);
 
-	private final int string;
-	
-	Type(int string) {
+	private final String string;
+	private final int index;
+
+	Type(String string, int index) {
 		this.string = string;
+		this.index = index;
 	}
-	
-	public int toString() { return string; }
+
+	public static LENGTH = 6; //faster than values().length;
+
+	public int index() { return index; }
+	public String toString() { return string; }
 }
